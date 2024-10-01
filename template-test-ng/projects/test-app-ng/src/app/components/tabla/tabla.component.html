@@ -1,0 +1,18 @@
+
+  @for (pokemon of pokemons; track $index) {
+    <app-card [cardPokemon]="pokemon" ></app-card>
+  }
+
+  <div class="container">
+    <button class="btn-primary" (click)="prevPage()" [disabled]="!prevUrl">Atrás</button>
+    <button class="btn-primary" (click)="nextPage()" [disabled]="!nextUrl">Siguiente</button>
+  </div>
+
+    
+      
+
+
+ 
+ 
+
+  

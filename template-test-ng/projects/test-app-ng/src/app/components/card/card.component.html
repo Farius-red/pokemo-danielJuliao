@@ -1,0 +1,24 @@
+<div class="card col-sm-6 col-md-4 col-xl-3">
+    <img 
+    [src]="getImageUrl(idPokemon)"
+      class="card__img" 
+      [alt]="namePokemon" 
+      (error)="handleImageError($event)">
+    
+    <div class="card__circle"></div>
+    
+    <div class="card-body" [ngClass]="typeBack">
+      <h5>#{{ idPokemon }}</h5>
+      <h1 class="card-title">{{ namePokemon }}</h1>
+      
+      <div class="card__type" [innerHTML]="typeIcon"></div>
+  
+      <button 
+        type="button" 
+        class="btn btn-primary" 
+        (click)="openModal(idPokemon)"> 
+        Ver Gráfica 
+      </button>
+    </div>
+  </div>
+  
