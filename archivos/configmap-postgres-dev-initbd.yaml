@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-script-dev-configmap
+  namespace: develop
+data:
+  initdb.sh: |-
+   #!/bin/bash
+   set -e
+   psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+   CREATE USER "juliaosistemdev" WITH PASSWORD '0d068B4290@123' SUPERUSER;
+   CREATE DATABASE juliaosistemdev;
+   CREATE DATABASE juliasistemNext;
+   GRANT ALL PRIVILEGES ON DATABASE juliaosistemdev TO "$POSTGRES_USER";
+   GRANT ALL PRIVILEGES ON DATABASE juliasistemNext TO "$POSTGRES_USER";
+   GRANT ALL PRIVILEGES ON SCHEMA public TO juliaosistemdev;
+   EOSQL

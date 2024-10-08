@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak-development
+  namespace: develop
+spec:
+  selector:
+    matchLabels:
+      app: keycloak-development
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: keycloak-development
+    spec:
+      containers:
+        - name: keycloak-development
+          image: bitnami/keycloak
+          imagePullPolicy: Always
+          env:
+            - name: KEYCLOAK_CREATE_ADMIN_USER
+              value: "true"
+            - name: KEYCLOAK_ADMIN_USER
+              value: juliaosistemdev
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              value: juliaosistemdev
+            - name: KEYCLOAK_DATABASE_HOST
+              value: 172.17.0.2
+            - name: KEYCLOAK_DATABASE_PORT
+              value: "30432"
+            - name: KEYCLOAK_DATABASE_NAME
+              value: keycloak
+            - name: KEYCLOAK_DATABASE_USER
+              value: juliaosistemdev
+            - name: KEYCLOAK_DATABASE_PASSWORD
+              value: 0d068B4290@123
+            - name: KEYCLOAK_DATABASE_GENERATION
+              value: "none"  # Esto deshabilita la generación automática de la base de datos
+            - name: KEYCLOAK_MIGRATION_ON_STARTUP
+              value: "true"
+          ports:
+            - name: https
+              containerPort: 8080
+---
+  apiVersion: v1
+  kind: Service
+  metadata: 
+    name: keycloak-development-service
+    namespace: develop
+    labels: 
+      app: keycloak-development
+  spec: 
+    ports: 
+      - name: keycloak-development
+        port: 8080
+        nodePort: 31188
+    type: NodePort
+    selector: 
+      app: keycloak-development
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: keycloak-pvc-dev
+  namespace: develop
+spec: 
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi  # Debe coincidir con el tamaño del PersistentVolume
+
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: keycloak-pv-dev
+  namespace: develop
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 20Gi 
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /bitnami
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak-ingress
+  namespace: develop
+spec:
+  rules:
+    - host: juliaosystem.server  
+      http:
+        paths:
+          - path: /keycloak   # Cambia la ruta a /keycloak
+            pathType: Prefix
+            backend:
+              service:
+                name: keycloak-development-service
+                port:
+                  number: 8080 
+
