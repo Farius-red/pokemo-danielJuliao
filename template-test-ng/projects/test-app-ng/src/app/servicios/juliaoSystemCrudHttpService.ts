@@ -14,8 +14,7 @@ export  class JuliaoSystemCrudHttpService<E> {
    
 
     add(entidad: any):Observable<E>{
-        
-        return  this.http.post<E>(this.basePathUrl+"add",entidad,{});
+        return  this.http.post<E>(this.basePathUrl+"/add",entidad,{});
         
     };
 

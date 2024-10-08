@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment';
   @Injectable({
     providedIn: 'root'
   })
-  export class CreditoService extends JuliaoSystemCrudHttpService<PlantillaResponse<CreditoResponse>> {
+  export class CompraService extends JuliaoSystemCrudHttpService<PlantillaResponse<CreditoResponse>> {
     
 
 
@@ -18,7 +18,7 @@ import { environment } from '../../environments/environment';
       protected override http: HttpClient,
     ) {
       super(http);
-      this.basePathUrl = environment.baseUrls+"/creditos/";
+      this.basePathUrl = environment.baseUrls+"/productos/";
     }
 
   }

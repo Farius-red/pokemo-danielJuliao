@@ -1,3 +1,4 @@
+import { AuthService } from './../../servicios/auth.service';
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatGridTile } from '@angular/material/grid-list';
 import { MatPaginator } from '@angular/material/paginator';
@@ -5,22 +6,25 @@ import { MatTableDataSource } from '@angular/material/table';
 import {CoreModule} from 'template-test-ng';
 import{PlantillaResponse} from 'juliaositembackenexpress/src/utils/PlantillaResponse';
 import{CreditoResponse} from '../../models/creditoResponse';
-import{CreditoService} from '../../servicios/credito.service';
+//import{CreditoService} from '../../servicios/credito.service';
 import { Subscription } from 'rxjs';
 import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
 import { MatDialog } from '@angular/material/dialog';
 import { LayoutModule } from '@angular/cdk/layout';
 import { CardComponent } from "../card/card.component";
 import { PokemonService } from '../../servicios/pokemon.service';
+import { KeycloakAngularModule } from 'keycloak-angular';
 
 @Component({
   selector: 'app-tabla',
   standalone: true,
-  imports: [CoreModule, LayoutModule, CardComponent],
+  imports: [CoreModule, LayoutModule, CardComponent,KeycloakAngularModule],
   templateUrl: './tabla.component.html',
   styleUrl: './tabla.component.scss'
 })
 export class TablaComponent implements OnInit, AfterViewInit {
+
+
   
   pokemons: any[] = [];
   nextUrl: string = '';
@@ -42,11 +46,14 @@ export class TablaComponent implements OnInit, AfterViewInit {
   @ViewChild(MatGridTile) gridTile!: MatGridTile; 
 
    usersSubscription: Subscription | undefined;
+  islogin: boolean  =  (localStorage.getItem("redirected") == 'true')? true:false  ;
 
-  constructor(private creditoSvc: CreditoService,
+  constructor(
+    //private creditoSvc: CreditoService,
     private dialog: MatDialog,private cdr: ChangeDetectorRef,
     private breakpointObserver: BreakpointObserver,
-    private pokemonService: PokemonService
+    private pokemonService: PokemonService,
+    private authSvc: AuthService
   ) {}
 
 
@@ -70,6 +77,7 @@ export class TablaComponent implements OnInit, AfterViewInit {
     }
 
     this.pokemonService.getPokemonDetails(url).subscribe(data => {
+   
       this.nextUrl = data.next;
       this.prevUrl = data.previous;
      
@@ -85,8 +93,33 @@ export class TablaComponent implements OnInit, AfterViewInit {
         });
       });
     });
+
+   
   }
 
+  
+  Logout() {
+    this.authSvc.logout()
+    this.islogin =false;
+    localStorage.clear();
+    window.location.href = 'http://localhost:4200/home';
+    
+    }
+
+  login(){
+    this.authSvc.login();
+    this.islogin=true;
+    if (!localStorage.getItem('redirected')) {
+      
+      window.location.href = 'http://localhost:4200/home';
+      localStorage.setItem('redirected', 'true');
+      this.islogin=true; // Guarda el estado en localStorage
+      
+    }
+    
+  }
+
+ 
   scremDataTable(){
     
 
@@ -116,37 +149,45 @@ export class TablaComponent implements OnInit, AfterViewInit {
     
   }
 
-  getAllUsers(id?: string | null, idBussines?: number | null): void {
-    this.usersSubscription = this.creditoSvc.all(id, idBussines).subscribe({
-      next: (response) => {
-        this.usersResponse = response;
-        console.log(this.usersResponse)
-        this.dataSource.data = response?.dataList ?? [];
-       this.dataSize = this.dataSource.data.length;
-       this.scremDataTable()
-      },
-      error: (error) => {
-        console.error(error);
-      }
-    });
-  }
+  // getAllUsers(id?: string | null, idBussines?: number | null): void {
+  //   this.usersSubscription = this.creditoSvc.all(id, idBussines).subscribe({
+  //     next: (response) => {
+  //       this.usersResponse = response;
+  //       console.log(this.usersResponse)
+  //       this.dataSource.data = response?.dataList ?? [];
+  //      this.dataSize = this.dataSource.data.length;
+  //      this.scremDataTable()
+  //     },
+  //     error: (error) => {
+  //       console.error(error);
+  //     }
+  //   });
+  // }
 
 
   nextPage(): void {
     if (this.nextUrl) {
+      debugger;
       console.log("nex", this.nextUrl)
       this.loadPokemon(this.nextUrl);
     }
   }
 
   prevPage(): void {
-    debugger;
 
     if (this.prevUrl) {
-
-console.log("previos" ,this.prevUrl)
       this.loadPokemon(this.prevUrl);
     }
   }
+
+  lisCompras() {
+    if(this.islogin){
+      window.location.href = 'http://localhost:4200/admin/listaCompras'
+  
+    }else{
+      alert("El usuario no esta logeado");
+    }
+  }
+  
 
 }

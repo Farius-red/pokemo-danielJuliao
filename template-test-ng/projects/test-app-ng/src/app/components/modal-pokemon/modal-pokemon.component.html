@@ -1,33 +1,52 @@
-<div class="modal fade" id="pokemonModal" tabindex="-1" aria-labelledby="pokemonModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content" [ngClass]="typeBack">
-        <div class="modal-header">
-          <h5 class="modal-title" id="pokemonModalLabel">#{{ pokemonId }}</h5>
-          <button type="button" class="btn-close" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="modal__info col-12 col-md-6">
-              <h1 class="modal__name">{{ namePokemon }}</h1>
-              <img [src]="urlImgPokemonFull + pokemonId + '.png'" alt="{{ namePokemon }}" class="img-fluid">
-              <div class="modal__type">
-                <img *ngFor="let icon of typeIcons" [src]="'assets/img/icon/' + icon + '.svg'" alt="">
-              </div>
-              <div class="modal__features">
-                <p>{{ tall }}m</p>
-                <p>{{ weight }}kg</p>
-              </div>
-              <div class="modal__description">
-                <p>{{ descriptionPokemon }}</p>
-              </div>
-            </div>
-            <div class="modal__graphic col-12 col-md-6">
-              <h1>Habilidades</h1>
-              <div id="chartContainer"></div> <!-- Contenedor de CanvasJS -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+
+<div mat-dialog-content>
+  <h1 class="modal__name">{{ namePokemon }}</h1>
+  <img style="height: 200px; width: 200px;" [src]="urlImgPokemonFull" alt="{{ namePokemon }}" class="img-fluid">
+
+  <div class="container w-100 d-flex flex-row justify-content-around ">
+
+    <p>{{ tall  }}m</p>
+    <p>{{ weight }}kg</p>
+    <p>{{ precio2 }} Precio</p>
+
   </div>
-  
+</div>
+<div mat-dialog-actions>
+  <div class="container  align-items-center" >
+
+    <button class="btn-primary"  (click)="addProduct()"> +</button>
+    <input matInput disabled [value]="cantidad">
+    <button class="btn-primary" (click)="comprar()"> comprar</button>
+  </div>
+</div>
+
+<!-- <div mat-dialog-content class="modal fade">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content ${typeBack}">
+       <div class="modal-header">
+       <h5 class="modal-title" id="exampleModalCenterTitle">{{pokemonId}}</h5>
+       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+       <img src="assets/img/close.svg">
+         </button>
+       </div>
+       <div class="modal-body">
+         <div class="row">
+             <div class="modal__info col-12 col-md-6">
+                <h1 class="modal__name">{{namePokemon}}</h1>
+                <div class="modal__pokemon col-12">
+                    <img [src]="urlImgPokemonFull" alt="...">
+                </div>
+              
+                <div class="modal__features col-12">
+                    <p>{{tall}}</p>
+                    <p>{{weight}}</p>
+                </div>
+                <div class="modal__description col-12">
+                   <p>{{precio2}}</p>
+                </div>
+             </div>
+         </div>
+       </div>    
+    </div>
+   </div>
+</div> -->

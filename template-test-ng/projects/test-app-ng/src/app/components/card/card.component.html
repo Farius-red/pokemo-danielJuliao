@@ -1,6 +1,6 @@
 <div class="card col-sm-6 col-md-4 col-xl-3">
     <img 
-    [src]="getImageUrl(idPokemon)"
+    [src]="getImageUrl(idImagenPokemon)"
       class="card__img" 
       [alt]="namePokemon" 
       (error)="handleImageError($event)">
@@ -8,7 +8,7 @@
     <div class="card__circle"></div>
     
     <div class="card-body" [ngClass]="typeBack">
-      <h5>#{{ idPokemon }}</h5>
+      <h5>#{{ idImagenPokemon }}</h5>
       <h1 class="card-title">{{ namePokemon }}</h1>
       
       <div class="card__type" [innerHTML]="typeIcon"></div>
@@ -16,9 +16,10 @@
       <button 
         type="button" 
         class="btn btn-primary" 
-        (click)="openModal(idPokemon)"> 
+        (click)="openModal(idPokemon,namePokemon,getImageUrl(idImagenPokemon),500)"> 
         Ver Gráfica 
       </button>
     </div>
   </div>
+  
   
